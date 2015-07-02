@@ -103,6 +103,7 @@ rewrite_primary() {
     return
   fi
   network=$(echo ${cidr}|cut -d/ -f1)
+  primary_ip=$(get_primary_ipv4)
   router=$(( $(echo ${network}|cut -d. -f4) + 1))
   gateway="$(echo ${network}|cut -d. -f1-3).${router}"
   cat <<- EOF > ${config_file}
@@ -110,6 +111,8 @@ rewrite_primary() {
 # See https://github.com/jessecollier/ubuntu-ec2net for source
 auto ${INTERFACE}
 iface ${INTERFACE} inet dhcp
+# Ensure that eth0 remains the interface used for the default route
+post-up ip route replace default via ${gateway} dev eth0
 post-up ip route add default via ${gateway} dev ${INTERFACE} table ${RTABLE}
 post-up ip route add default via ${gateway} dev ${INTERFACE} metric ${RTABLE}
 EOF
