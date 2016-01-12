@@ -8,7 +8,7 @@ add_file () {
   FOLDER=$2
   MODE=$3
 
-  echo "cat <<__EOF__ > ${FOLDER}/${FILE}" >> ${SCRIPT}
+  echo "cat <<'__EOF__' > ${FOLDER}/${FILE}" >> ${SCRIPT}
   cat ${FILE} >> $SCRIPT
   echo "__EOF__" >> ${SCRIPT}
   echo "chmod ${MODE} ${FOLDER}/${FILE}" >> ${SCRIPT}
